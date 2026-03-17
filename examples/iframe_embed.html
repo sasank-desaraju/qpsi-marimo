@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QPSI Knowledgebase — Embedded Notebook Example</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+      color: #333;
+    }
+    .page-header {
+      max-width: 1000px;
+      margin: 0 auto 20px;
+    }
+    .page-header h1 {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+    .page-header p {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    .embed-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .embed-label {
+      background: #003087; /* UF blue */
+      color: white;
+      padding: 12px 20px;
+      font-weight: 600;
+    }
+    .embed-container iframe {
+      width: 100%;
+      height: 80vh;
+      border: none;
+      display: block;
+    }
+    .instructions {
+      max-width: 1000px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .instructions h2 {
+      font-size: 1.1rem;
+      margin-top: 0;
+    }
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 0.85em;
+    }
+    pre {
+      background: #f0f0f0;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 0.85em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>QPSI Knowledgebase</h1>
+    <p>Example of embedding a marimo notebook in an iframe, as it would appear in the Knowledgebase.</p>
+  </div>
+
+  <div class="embed-container">
+    <div class="embed-label">Biostatistics Module: Hypothesis Testing, Power, and p-values</div>
+    <!--
+      Replace the src below with your deployed GitHub Pages URL.
+      Example: https://your-org.github.io/qpsi-marimo/notebooks/hypothesis_power.html
+    -->
+    <iframe
+      src="https://YOUR-ORG.github.io/qpsi-marimo/notebooks/hypothesis_power.html"
+      title="Hypothesis Testing, Power, and p-values"
+      loading="lazy"
+      allow="cross-origin-isolated"
+    ></iframe>
+  </div>
+
+  <div class="instructions">
+    <h2>How to embed in the QPSI Knowledgebase</h2>
+    <p>After deploying to GitHub Pages, each notebook is available at:</p>
+    <pre>https://YOUR-ORG.github.io/qpsi-marimo/notebooks/NOTEBOOK_NAME.html</pre>
+
+    <p>Embed any notebook with a simple iframe tag:</p>
+    <pre>&lt;iframe
+  src="https://YOUR-ORG.github.io/qpsi-marimo/notebooks/hypothesis_power.html"
+  title="Hypothesis Testing"
+  style="width: 100%; height: 80vh; border: none;"
+  loading="lazy"
+  allow="cross-origin-isolated"
+&gt;&lt;/iframe&gt;</pre>
+
+    <h2>Available notebooks</h2>
+    <ul>
+      <li><code>hypothesis_power.html</code> — Hypothesis Testing, Power, and p-values</li>
+      <li><code>diagnostic_testing.html</code> — Diagnostic Testing: The 2x2 Matrix</li>
+      <li><code>likelihood_ratios.html</code> — Likelihood Ratios & Fagan's Nomogram</li>
+      <li><code>survival_analysis.html</code> — Kaplan-Meier & Hazard Ratios</li>
+      <li><code>confidence_intervals.html</code> — Confidence Intervals: Precision vs Significance</li>
+      <li><code>measures_of_association.html</code> — OR vs RR vs NNT</li>
+      <li><code>roc_curves.html</code> — ROC Curves & Optimal Cutoff</li>
+      <li><code>screening_bias.html</code> — Lead-Time and Length-Time Bias</li>
+      <li><code>forest_plots.html</code> — Forest Plots & Heterogeneity</li>
+      <li><code>correlation_regression.html</code> — Correlation vs Regression</li>
+    </ul>
+
+    <h2>Notes</h2>
+    <ul>
+      <li><code>loading="lazy"</code> defers loading until the iframe scrolls into view — important if embedding multiple notebooks on one page.</li>
+      <li><code>allow="cross-origin-isolated"</code> is needed for SharedArrayBuffer, which the WASM runtime may use.</li>
+      <li>Notebooks are fully interactive — sliders, charts, and all UI elements work inside the iframe.</li>
+    </ul>
+  </div>
+
+</body>
+</html>

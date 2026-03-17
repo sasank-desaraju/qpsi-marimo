@@ -1,5 +1,6 @@
 
 *.lock
+.claude/
 
 
 # Byte-compiled / optimized / DLL files

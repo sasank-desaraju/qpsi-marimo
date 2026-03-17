@@ -4,3 +4,8 @@ Help on creating Marimo notebooks is at ai/MARIMO.md.
 
 Update the AI log at ai/LOG.md with what you do.
 This is to help the human user check on you and to help future agents pick up where you leave off.
+
+
+
+Your job is to help make these notebooks which will be run in app mode.
+Some examples are in examples/ with roc and ppv being the best.
