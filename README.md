@@ -104,7 +104,7 @@ After deployment, embed any notebook with an iframe:
 
 ```html
 <iframe
-  src="https://YOUR-ORG.github.io/qpsi-marimo/notebooks/hypothesis_power.html"
+  src="https://sasank-desaraju.github.io/qpsi-marimo/notebooks/hypothesis_power.html"
   style="width: 100%; height: 80vh; border: none;"
   loading="lazy"
   allow="cross-origin-isolated"
