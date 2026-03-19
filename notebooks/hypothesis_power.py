@@ -173,6 +173,7 @@ def _(
     beta_shade_df,
     crit_value,
     curve_df,
+    mo,
     pd,
     power_shade_df,
 ):
@@ -234,7 +235,11 @@ def _(
     ).encode(x='x:Q', text='label:N')
 
     chart = curves + alpha_area + power_area + beta_area + crit_line + crit_label
-    chart
+    mo.vstack([
+        chart,
+        mo.accordion({"View data table": mo.ui.table(curve_df[['x', 'density', 'Distribution']])}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Null and alternative sampling distributions with critical value at {crit_value:.3f}. Shaded areas show alpha (Type I error), power, and beta (Type II error) regions.</div>')
+    ])
     return
 
 
@@ -269,7 +274,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alpha_slider, alt, effect_size_slider, np, pd, sample_size_slider, sp_stats):
+def _(alpha_slider, alt, effect_size_slider, mo, np, pd, sample_size_slider, sp_stats):
     # Power curve as a function of sample size
     _d = effect_size_slider.value
     _alpha = alpha_slider.value
@@ -322,7 +327,11 @@ def _(alpha_slider, alt, effect_size_slider, np, pd, sample_size_slider, sp_stat
     )
 
     power_chart = power_line + ref_line + ref_label + current_dot
-    power_chart
+    mo.vstack([
+        power_chart,
+        mo.accordion({"View data table": mo.ui.table(power_curve_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Power vs sample size curve for effect size d={_d:.2f} and alpha={_alpha:.2f}. Current sample size n={_n_current} yields power={_power_current:.1%}. The 80% power reference line is shown.</div>')
+    ])
     return
 
 

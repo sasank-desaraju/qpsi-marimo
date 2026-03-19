@@ -10,8 +10,11 @@
 
 import marimo
 
-__generated_with = "0.21.0"
-app = marimo.App(width="medium", app_title="Measures of Association: OR vs RR vs NNT")
+__generated_with = "0.20.3"
+app = marimo.App(
+    width="medium",
+    app_title="Measures of Association: OR vs RR vs NNT",
+)
 
 
 @app.cell(hide_code=True)
@@ -20,6 +23,7 @@ def _():
     import numpy as np
     import pandas as pd
     import altair as alt
+
     return alt, mo, np, pd
 
 
@@ -67,7 +71,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(baseline_risk_slider, np, rrr_slider):
+def _(baseline_risk_slider, rrr_slider):
     # Core calculations
     baseline_risk = baseline_risk_slider.value / 100
     rrr = rrr_slider.value / 100
@@ -116,7 +120,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, arr, baseline_risk, pd, treatment_risk):
+def _(alt, arr, baseline_risk, mo, pd, treatment_risk):
     bar_data = pd.DataFrame({
         'Group': ['Control', 'Treatment'],
         'Event Risk (%)': [baseline_risk * 100, treatment_risk * 100]
@@ -150,7 +154,11 @@ def _(alt, arr, baseline_risk, pd, treatment_risk):
     ).encode(x='x:O', y='y:Q', text='label:N')
 
     risk_chart = bars + bar_labels + arr_label
-    risk_chart
+    mo.vstack([
+        risk_chart,
+        mo.accordion({"View data table": mo.ui.table(bar_data)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Bar chart comparing event risk: control group {baseline_risk:.1%} vs treatment group {treatment_risk:.1%}, absolute risk reduction {arr:.1%}.</div>')
+    ])
     return
 
 
@@ -168,15 +176,15 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, baseline_risk_slider, np, pd, rrr):
+def _(alt, baseline_risk_slider, mo, np, pd, rrr):
     # NNT vs baseline risk curve
     risk_range = np.arange(1, 81, 1)
     nnt_data = []
     for _r_pct in risk_range:
         _r = _r_pct / 100
         _arr = _r * rrr
-        _nnt = 1 / _arr if _arr > 0 else 500
-        _nnt = min(_nnt, 500)  # cap for display
+        _nnt = 1 / _arr if _arr > 0 else 200
+        _nnt = min(_nnt, 200)  # cap for display
         nnt_data.append({
             'Baseline Risk (%)': int(_r_pct),
             'NNT': _nnt
@@ -210,7 +218,11 @@ def _(alt, baseline_risk_slider, np, pd, rrr):
     )
 
     nnt_chart = nnt_line + current_pt
-    nnt_chart
+    mo.vstack([
+        nnt_chart,
+        mo.accordion({"View data table": mo.ui.table(nnt_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">NNT vs baseline risk curve with RRR held at {rrr:.0%}. Current baseline risk {_current_br}% gives NNT of {_current_nnt:.1f}. NNT increases sharply as baseline risk decreases.</div>')
+    ])
     return
 
 
@@ -229,7 +241,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, np, pd, rrr):
+def _(alt, mo, np, pd, rrr):
     # OR vs RR across baseline risks
     risk_range_2 = np.arange(1, 81, 1)
     or_rr_data = []
@@ -272,7 +284,12 @@ def _(alt, np, pd, rrr):
         strokeDash=[5, 3], color='gray'
     ).encode(y='y:Q')
 
-    or_rr_chart + ref
+    _or_rr_final = or_rr_chart + ref
+    mo.vstack([
+        _or_rr_final,
+        mo.accordion({"View data table": mo.ui.table(or_rr_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">OR vs RR across baseline risks with RRR={rrr:.0%}. RR remains constant while OR diverges downward as baseline risk increases, showing OR overestimates the effect at higher event rates.</div>')
+    ])
     return
 
 
@@ -347,14 +364,14 @@ def _(mo):
     mo.accordion(
         {
             "Read the Anchor Paper: WOSCOPS (1995)": mo.md("""
-**Shepherd J, Cobbe SM, Ford I, et al.** "Prevention of coronary heart disease with pravastatin
-in men with hypercholesterolemia." *N Engl J Med.* 1995;333(20):1301-7.
+    **Shepherd J, Cobbe SM, Ford I, et al.** "Prevention of coronary heart disease with pravastatin
+    in men with hypercholesterolemia." *N Engl J Med.* 1995;333(20):1301-7.
 
-[Open on PubMed](https://pubmed.ncbi.nlm.nih.gov/7566020/) |
-[Open on NEJM (may require institutional access)](https://doi.org/10.1056/NEJM199511163332001)
+    [Open on PubMed](https://pubmed.ncbi.nlm.nih.gov/7566020/) |
+    [Open on NEJM (may require institutional access)](https://doi.org/10.1056/NEJM199511163332001)
 
-*If you are on a UF network or VPN, the NEJM link should provide full-text access.*
-""")
+    *If you are on a UF network or VPN, the NEJM link should provide full-text access.*
+    """)
         },
         lazy=True,
     )

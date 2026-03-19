@@ -118,7 +118,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, cutoff_slider, dist_df, pd):
+def _(alt, cutoff_slider, dist_df, mo, pd):
     # Distribution plot with cutoff
     dist_chart = alt.Chart(dist_df).mark_area(opacity=0.5).encode(
         x=alt.X('Biomarker Value:Q'),
@@ -139,7 +139,12 @@ def _(alt, cutoff_slider, dist_df, pd):
         align='left', dx=5, dy=-15, fontSize=11, color='red'
     ).encode(x='x:Q', y='y:Q', text='label:N')
 
-    dist_chart + cutoff_line + cutoff_label
+    _dist_combined = dist_chart + cutoff_line + cutoff_label
+    mo.vstack([
+        _dist_combined,
+        mo.accordion({"View data table": mo.ui.table(dist_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Biomarker distribution chart for healthy and diseased populations with cutoff at {cutoff_slider.value}.</div>')
+    ])
     return
 
 
@@ -189,7 +194,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, fpr, healthy_mu, np, pd, sensitivity, sigma, sick_mu, sp_stats):
+def _(alt, fpr, healthy_mu, mo, np, pd, sensitivity, sigma, sick_mu, sp_stats):
     # Build ROC curve
     cutoff_range = np.linspace(
         min(healthy_mu, sick_mu) - 4 * sigma,
@@ -253,7 +258,11 @@ def _(alt, fpr, healthy_mu, np, pd, sensitivity, sigma, sick_mu, sp_stats):
     )
 
     roc_chart = roc_line + diag_line + current_point
-    roc_chart
+    mo.vstack([
+        roc_chart,
+        mo.accordion({"View data table": mo.ui.table(roc_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">ROC curve with AUC = {auc_val:.3f}. Current operating point: sensitivity {sensitivity:.1%}, false positive rate {fpr:.1%}.</div>')
+    ])
     return (auc_val,)
 
 

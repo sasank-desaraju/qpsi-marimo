@@ -191,6 +191,7 @@ def _(
     control_censor_times,
     control_km_s,
     control_km_t,
+    mo,
     np,
     pd,
     treatment_censor_times,
@@ -264,7 +265,11 @@ def _(
     )
 
     km_chart = km_curves + censor_marks
-    km_chart
+    mo.vstack([
+        km_chart,
+        mo.accordion({"View data table": mo.ui.table(km_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Kaplan-Meier survival curves for control and treatment groups with true hazard ratio {true_hr:.2f}.</div>')
+    ])
     return
 
 
@@ -326,6 +331,7 @@ def _(
     control_event,
     control_obs,
     max_time,
+    mo,
     np,
     pd,
     treatment_event,
@@ -365,7 +371,11 @@ def _(
         t_events = int(np.sum((treatment_obs >= t_start) & (treatment_obs < t_end) & (treatment_event == 1)))
         event_data.append({'Interval': f'{t_start}-{t_end}', 'Control Events': c_events, 'Treatment Events': t_events})
 
-    nar_chart
+    mo.vstack([
+        nar_chart,
+        mo.accordion({"View data table": mo.ui.table(nar_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Number at risk table showing patients remaining at each 12-month interval for control and treatment groups over {max_time} months.</div>')
+    ])
     return
 
 

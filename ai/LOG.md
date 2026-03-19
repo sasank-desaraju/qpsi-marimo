@@ -113,3 +113,16 @@ Log for AI agents to update with what they do.
   - Flagged ADA compliance as main open concern — recommended UF accessibility team review before full rollout
   - All our packages (Altair, NumPy, Pandas, SciPy) confirmed Pyodide-compatible for WASM
 
+2026-03-19:
+
+### ADA/Accessibility Compliance (per Jonathan's guidance in planning/constraints.md):
+
+- Added accessibility features to all 22 chart cells across all 10 notebooks:
+  1. **SVG output**: Already compliant — Altair renders SVG by default
+  2. **Data tables**: Added `mo.accordion({"View data table": mo.ui.table(df)})` below every chart, collapsed by default
+  3. **Keyboard access**: Already compliant — marimo UI elements are standard HTML form elements
+  4. **ARIA live regions**: Added visually-hidden `<div aria-live="polite" aria-atomic="true">` with dynamic text summaries to every chart cell
+- All changes use the "sr-only" CSS pattern — zero visual impact for sighted users
+- Created `Accessibility.md` documenting all compliance features, implementation details, and remaining items
+- Added Accessibility section with link in `README.md`
+

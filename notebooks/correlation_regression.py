@@ -124,7 +124,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, line_df, r_squared, r_val, scatter_df, slope_est):
+def _(alt, line_df, mo, r_squared, r_val, scatter_df, slope_est):
     # Scatterplot
     scatter = alt.Chart(scatter_df).mark_circle(
         size=50, opacity=0.6, color='#1f77b4'
@@ -145,7 +145,13 @@ def _(alt, line_df, r_squared, r_val, scatter_df, slope_est):
         color='#d62728', strokeWidth=2.5
     ).encode(x='X:Q', y='Y:Q')
 
-    scatter + reg_line
+    _chart = scatter + reg_line
+    _sr_summary = f"Scatterplot of {len(scatter_df)} points with regression line. Pearson r = {r_val:.3f}, R-squared = {r_squared:.3f}, estimated slope = {slope_est:.3f}."
+    mo.vstack([
+        _chart,
+        mo.accordion({"View data table": mo.ui.table(scatter_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">{_sr_summary}</div>')
+    ])
     return
 
 
@@ -183,7 +189,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, intercept_slider, np, pd, sp_stats, true_slope_slider):
+def _(alt, intercept_slider, mo, np, pd, sp_stats, true_slope_slider):
     # R² vs noise level
     np.random.seed(42)
     _n = 50
@@ -214,7 +220,12 @@ def _(alt, intercept_slider, np, pd, sp_stats, true_slope_slider):
         title=f'R² vs Noise Level (True Slope = {_slope:.1f})'
     )
 
-    r2_chart
+    _sr_summary = f"Line chart showing R-squared decreasing as noise increases for true slope = {_slope:.1f}. R-squared ranges from {r2_df['R²'].max():.3f} at low noise to {r2_df['R²'].min():.3f} at high noise."
+    mo.vstack([
+        r2_chart,
+        mo.accordion({"View data table": mo.ui.table(r2_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">{_sr_summary}</div>')
+    ])
     return
 
 

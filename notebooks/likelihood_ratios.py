@@ -159,6 +159,7 @@ def _(
     alt,
     lr_neg,
     lr_pos,
+    mo,
     np,
     pd,
     posttest_prob_neg,
@@ -286,7 +287,15 @@ def _(
         title='Fagan\'s Nomogram'
     ).configure_view(strokeWidth=0)
 
-    nomogram
+    _summary_df = pd.DataFrame({
+        'Metric': ['Pre-test Probability', 'LR+', 'LR-', 'Post-test Prob (Test +)', 'Post-test Prob (Test -)'],
+        'Value': [f'{pretest_prob:.1%}', f'{lr_pos:.2f}', f'{lr_neg:.3f}', f'{posttest_prob_pos:.1%}', f'{posttest_prob_neg:.1%}']
+    })
+    mo.vstack([
+        nomogram,
+        mo.accordion({"View data table": mo.ui.table(_summary_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Fagan\'s nomogram showing pre-test probability {pretest_prob:.0%} with LR+ {lr_pos:.1f} yielding post-test probability {posttest_prob_pos:.1%} (positive test) and LR- {lr_neg:.2f} yielding {posttest_prob_neg:.1%} (negative test).</div>')
+    ])
     return
 
 
@@ -302,7 +311,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, np, pd, sens, spec):
+def _(alt, mo, np, pd, sens, spec):
     # Sweep pre-test probability
     _lr_pos = sens / (1 - spec)
     _lr_neg = (1 - sens) / spec
@@ -356,7 +365,11 @@ def _(alt, np, pd, sens, spec):
         title=f'How This Test Updates Probability (Sens={sens:.0%}, Spec={spec:.0%})'
     )
 
-    sweep_chart
+    mo.vstack([
+        sweep_chart,
+        mo.accordion({"View data table": mo.ui.table(sweep_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Post-test probability sweep across all pre-test probabilities for a test with sensitivity {sens:.0%} and specificity {spec:.0%}. Shows how positive and negative results shift probability.</div>')
+    ])
     return
 
 

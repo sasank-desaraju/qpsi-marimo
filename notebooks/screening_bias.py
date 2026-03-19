@@ -76,7 +76,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, onset_to_death, pd, screening_year, symptom_year):
+def _(alt, mo, onset_to_death, pd, screening_year, symptom_year):
     # Timeline visualization for lead-time bias
     _death = onset_to_death.value
     _symptom = min(symptom_year.value, _death)
@@ -128,7 +128,12 @@ def _(alt, onset_to_death, pd, screening_year, symptom_year):
         y=alt.Y('Patient:N', sort=['No Screening', 'With Screening'])
     )
 
-    gantt + death_mark
+    _gantt_combined = gantt + death_mark
+    mo.vstack([
+        _gantt_combined,
+        mo.accordion({"View data table": mo.ui.table(tl_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Lead-time bias timeline: without screening survival is {survival_no_screen} years, with screening apparent survival is {survival_with_screen} years. Lead time is {lead_time} years.</div>')
+    ])
     return lead_time, survival_no_screen, survival_with_screen
 
 
@@ -179,7 +184,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, n_patients_sim, np, pd):
+def _(alt, mo, n_patients_sim, np, pd):
     # Simulate diseases with different growth rates
     np.random.seed(42)
     _n = n_patients_sim.value
@@ -249,7 +254,11 @@ def _(alt, n_patients_sim, np, pd):
     )
 
     detect_chart = detect_bars + detect_text
-    detect_chart
+    mo.vstack([
+        detect_chart,
+        mo.accordion({"View data table": mo.ui.table(detection_summary)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Detection rate bar chart for {n_patients_sim.value} patients showing screening detection rates by disease aggressiveness: slow-growing, medium, and fast-growing tumors.</div>')
+    ])
     return (disease_df,)
 
 

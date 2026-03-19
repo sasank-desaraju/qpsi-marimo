@@ -19,6 +19,10 @@ Built with [marimo](https://marimo.io), a reactive Python notebook framework. No
 | 9 | Forest Plots & Heterogeneity | `notebooks/forest_plots.py` |
 | 10 | Correlation vs Regression | `notebooks/correlation_regression.py` |
 
+## Accessibility
+
+All notebooks are built with ADA compliance in mind — SVG charts, toggleable data tables, keyboard-navigable controls, and ARIA live regions for screen readers. See **[Accessibility.md](Accessibility.md)** for full details.
+
 ## Quick Start
 
 ### Prerequisites

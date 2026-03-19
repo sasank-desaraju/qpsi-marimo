@@ -165,6 +165,7 @@ def _(mo):
 def _(
     active_df,
     alt,
+    mo,
     pd,
     pooled_ci_high,
     pooled_ci_low,
@@ -237,7 +238,12 @@ def _(
             title='Forest Plot'
         )
 
-    _chart
+    _sr_summary = f"Forest plot showing {len(active_df)} included studies. Pooled effect estimate = {pooled_effect:.3f} (95% CI: {pooled_ci_low:.3f} to {pooled_ci_high:.3f})."
+    mo.vstack([
+        _chart,
+        mo.accordion({"View data table": mo.ui.table(active_df) if len(active_df) > 0 else mo.md("No studies selected.")}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">{_sr_summary}</div>')
+    ])
     return
 
 

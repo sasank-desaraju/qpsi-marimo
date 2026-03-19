@@ -132,7 +132,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, pd, population, statuses_shuffled):
+def _(alt, mo, pd, population, statuses_shuffled):
     # Build the dot grid (25 columns x 40 rows = 1000 dots)
     cols = 25
     rows = population // cols
@@ -163,7 +163,13 @@ def _(alt, pd, population, statuses_shuffled):
         title='Population of 1,000 People'
     ).configure_view(strokeWidth=0)
 
-    dot_chart
+    _status_counts = dot_data['status'].value_counts()
+    _sr_summary = f"Dot grid showing {population} people: {_status_counts.get('True Positive', 0)} true positives, {_status_counts.get('False Positive', 0)} false positives, {_status_counts.get('True Negative', 0)} true negatives, {_status_counts.get('False Negative', 0)} false negatives."
+    mo.vstack([
+        dot_chart,
+        mo.accordion({"View data table": mo.ui.table(dot_data[['status']].rename(columns={'status': 'Status'}).reset_index(drop=True))}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">{_sr_summary}</div>')
+    ])
     return
 
 
@@ -207,7 +213,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, np, pd, sensitivity_slider, specificity_slider):
+def _(alt, mo, np, pd, sensitivity_slider, specificity_slider):
     # PPV and NPV as a function of prevalence
     _sens = sensitivity_slider.value / 100
     _spec = specificity_slider.value / 100
@@ -247,7 +253,12 @@ def _(alt, np, pd, sensitivity_slider, specificity_slider):
         title=f'PPV and NPV vs Prevalence (Sens={_sens:.0%}, Spec={_spec:.0%})'
     )
 
-    pv_chart
+    _sr_summary = f"Line chart showing PPV and NPV across prevalence 1-50% with sensitivity {_sens:.0%} and specificity {_spec:.0%}. PPV rises from {pv_df['PPV'].iloc[0]:.1%} to {pv_df['PPV'].iloc[-1]:.1%} as prevalence increases."
+    mo.vstack([
+        pv_chart,
+        mo.accordion({"View data table": mo.ui.table(pv_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">{_sr_summary}</div>')
+    ])
     return
 
 
@@ -262,7 +273,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, fn, fp, pd, tn, tp):
+def _(alt, fn, fp, mo, pd, tn, tp):
     # Confusion matrix heatmap
     conf_data = pd.DataFrame({
         'True Condition': ['Disease +', 'Disease +', 'Disease −', 'Disease −'],
@@ -296,7 +307,12 @@ def _(alt, fn, fp, pd, tn, tp):
     )
 
     conf_chart = heatmap + text
-    conf_chart
+    _sr_summary = f"Confusion matrix heatmap: TP={tp}, FN={fn}, FP={fp}, TN={tn}."
+    mo.vstack([
+        conf_chart,
+        mo.accordion({"View data table": mo.ui.table(conf_data[['True Condition', 'Test Result', 'Count']])}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">{_sr_summary}</div>')
+    ])
     return
 
 

@@ -129,7 +129,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, conf_level, pd, trials_df, true_effect):
+def _(alt, conf_level, mo, pd, trials_df, true_effect):
     # Forest plot
     error_bars = alt.Chart(trials_df).mark_rule(strokeWidth=2).encode(
         y=alt.Y('Trial:O', title='Trial', sort='descending'),
@@ -177,7 +177,13 @@ def _(alt, conf_level, pd, trials_df, true_effect):
     ).encode(x='x:Q', y='y:O', text='label:N')
 
     forest = error_bars + points + null_line + truth_line + truth_label
-    forest
+    _n_sig = int(trials_df['Significant'].eq('Yes').sum())
+    _sr_summary = f"Forest plot of {len(trials_df)} simulated trials with true effect {true_effect:.2f} at {conf_level:.0%} confidence level. {_n_sig} of {len(trials_df)} trials reached statistical significance."
+    mo.vstack([
+        forest,
+        mo.accordion({"View data table": mo.ui.table(trials_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">{_sr_summary}</div>')
+    ])
     return
 
 
@@ -211,7 +217,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, np, pd, sp_stats):
+def _(alt, mo, np, pd, sp_stats):
     # CI width as a function of n
     n_range = np.arange(10, 510, 10)
     _z = sp_stats.norm.ppf(0.975)
@@ -237,7 +243,12 @@ def _(alt, np, pd, sp_stats):
         title='How Confidence Interval Width Shrinks with Sample Size'
     )
 
-    width_chart
+    _sr_summary = f"Line chart showing 95% CI width decreasing from {ci_widths[0]:.2f} at n=10 to {ci_widths[-1]:.2f} at n=500 as sample size increases."
+    mo.vstack([
+        width_chart,
+        mo.accordion({"View data table": mo.ui.table(width_df)}),
+        mo.Html(f'<div aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">{_sr_summary}</div>')
+    ])
     return
 
 

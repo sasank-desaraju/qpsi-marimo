@@ -10,6 +10,20 @@ I wonder if we could put the whole notebook in the iFrame and the ADA-compliant 
 This would be nice :)
 
 
+## New ADA/accessibilty guidance from QPSI team member:
+This looks great, Sasank! I’ve done some preliminary research, and we’d have some considerable work to make the interactive charts compliant from an accessibility perspective. Here are a few of the biggest items:
+
+- Output charts as SVG as much as possible instead of as a canvas element.
+- Provide table versions of charts. These could be something that gets toggled on or off if we don’t want to clutter the view for sighted users.
+- Make sure inputs for charts can be accessed and updated by keyboard (ie - user can tab to the controls and update values with keyboard)
+- Aria-live, aria-atomic, and aria-relevant attributes should be used where a chart changes. This could be a hidden element that summarizes the data to the screen reader when a relevant change is made to the chart.
+
+We’d need to check on a couple of other minor items, but these are the biggest hurdles for implementation.
+
+
+
+
+
 
 
 
