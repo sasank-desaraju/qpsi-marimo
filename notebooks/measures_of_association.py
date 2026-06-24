@@ -14,6 +14,8 @@ __generated_with = "0.20.3"
 app = marimo.App(
     width="medium",
     app_title="Measures of Association: OR vs RR vs NNT",
+    css_file="qpsi_theme.css",
+    html_head_file="qpsi_head.html",
 )
 
 

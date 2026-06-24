@@ -33,19 +33,27 @@ def export_notebook(notebook_path: Path, output_dir: Path) -> bool:
     output_file = output_dir / notebook_path.with_suffix(".html")
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
+    # marimo resolves App(css_file=...) / html_head_file=... relative to the
+    # notebook's *working directory*, not its full path, so we run the export
+    # from inside notebooks/ (passing the bare filename) and use absolute paths
+    # for the notebook and output. Without this the shared theme files would be
+    # silently dropped from the export.
     cmd = [
         "uvx", f"marimo=={MARIMO_VERSION}",
         "export", "html-wasm",
         "--sandbox",
         "--mode", "run",
         "--no-show-code",
-        str(notebook_path),
-        "-o", str(output_file),
+        notebook_path.name,
+        "-o", str(output_file.resolve()),
     ]
 
     logger.info(f"Exporting {notebook_path} -> {output_file}")
     try:
-        subprocess.run(cmd, capture_output=True, text=True, check=True)
+        subprocess.run(
+            cmd, capture_output=True, text=True, check=True,
+            cwd=notebook_path.parent,
+        )
         logger.info(f"Success: {notebook_path}")
         return True
     except subprocess.CalledProcessError as e:

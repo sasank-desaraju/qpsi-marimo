@@ -11,7 +11,7 @@
 import marimo
 
 __generated_with = "0.21.0"
-app = marimo.App(width="medium", app_title="Survival Analysis: Kaplan-Meier & Hazard Ratios")
+app = marimo.App(width="medium", app_title="Survival Analysis: Kaplan-Meier & Hazard Ratios", css_file="qpsi_theme.css", html_head_file="qpsi_head.html")
 
 
 @app.cell(hide_code=True)

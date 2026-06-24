@@ -12,3 +12,9 @@ dependencies = [
     "pandas>=2.3.3",
     "scipy>=1.15.3",
 ]
+
+# Pin notebooks to light mode so the exported apps always match the white QPSI
+# Knowledgebase, regardless of the viewer's (or the exporter's) OS dark-mode
+# preference. Without this the export inherits the local user's marimo theme.
+[tool.marimo.display]
+theme = "light"

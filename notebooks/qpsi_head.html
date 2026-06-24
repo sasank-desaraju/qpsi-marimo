@@ -1,0 +1,23 @@
+<!--
+  QPSI Knowledgebase head injection for marimo notebooks.
+  Loads the "Anybody" font used by the Knowledgebase and applies it to marimo
+  headings so notebook typography matches the host site.
+  Loaded via App(html_head_file="qpsi_head.html").
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family=Anybody:wght@500;600;700&display=swap"
+  rel="stylesheet"
+>
+<style>
+  :root {
+    --marimo-heading-font: "Anybody", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .markdown h1,
+  .markdown h2,
+  .markdown h3,
+  .prose :where(h1, h2, h3):not(:where([class~="not-prose"] *)) {
+    font-family: "Anybody", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+</style>

@@ -1,0 +1,65 @@
+/*
+ * QPSI Knowledgebase theme for marimo notebooks.
+ * Accent theming only — keeps marimo's clean light layout, recolors accents to
+ * match https://knowledge.qpsi.med.ufl.edu/ (palette extracted from the live
+ * Divi stylesheet). Loaded via App(css_file="qpsi_theme.css").
+ *
+ * Palette:
+ *   UF Blue (primary)  #0021A5
+ *   Deep navy          #002657
+ *   Body text          #262626
+ *   Gold accent        #F2A900
+ *   Orange accent      #ED6B21
+ */
+
+:root {
+  /* Interactive accents: sliders, buttons, checkboxes, focus rings */
+  --primary: #0021A5;
+  --primary-foreground: #ffffff;
+
+  /* Links */
+  --link: #0021A5;
+  --link-visited: #002657;
+
+  /* Soft accent surfaces (hover backgrounds, selected rows) */
+  --accent: #eef2fb;
+  --accent-foreground: #0021A5;
+
+  /* Markdown prose tokens */
+  --tw-prose-links: #0021A5;
+  --tw-prose-headings: #0021A5;
+}
+
+/* Markdown headings -> UF Blue. Cover marimo's prose + raw markdown containers. */
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.prose :where(h1, h2, h3):not(:where([class~="not-prose"] *)) {
+  color: #0021A5;
+}
+
+/* Keep a subtle navy underline accent under the top-level title */
+.markdown h1,
+.prose :where(h1):not(:where([class~="not-prose"] *)) {
+  border-bottom: 2px solid #eef2fb;
+  padding-bottom: 0.2em;
+}
+
+/* Links in prose */
+.markdown a,
+.prose :where(a):not(:where([class~="not-prose"] *)) {
+  color: #0021A5;
+}
+
+/* Table header tint -> navy, for both markdown tables and mo.ui.table */
+.markdown table thead th,
+.prose :where(thead th):not(:where([class~="not-prose"] *)) {
+  background: #002657;
+  color: #ffffff;
+  border-color: #002657;
+}
+
+/* Accordion / details summary accent */
+details > summary {
+  color: #0021A5;
+}

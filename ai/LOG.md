@@ -1,6 +1,29 @@
 Log for AI agents to update with what they do.
 
 
+2026-06-24:
+
+### QPSI Knowledgebase branding for notebooks (accent theming)
+
+- Goal: make embedded notebooks visually align with knowledge.qpsi.med.ufl.edu.
+- Extracted the real brand palette from the live Divi stylesheet
+  (`et-core-unified-2.min.css`): UF Blue **#0021A5** (headings/links — dominant
+  brand color), deep navy **#002657**, body text #262626, gold #F2A900, orange
+  #ED6B21. Site heading/body font is **Anybody** (Google font).
+- Added `notebooks/qpsi_theme.css` — overrides marimo's `:root` theme tokens
+  (`--primary`, `--link`, `--accent`, prose heading/link colors, table-header tint).
+- Added `notebooks/qpsi_head.html` — loads the Anybody font, sets `--marimo-heading-font`.
+- Wired both into all 10 notebooks via `App(css_file=..., html_head_file=...)`.
+- **Build fix:** marimo resolves these paths relative to the notebook's *working
+  dir*, not its full path. Updated `.github/scripts/build.py` to export with
+  `cwd=notebooks/` (bare filename + absolute output) so the theme files actually
+  bundle into the WASM export. Without this they were silently dropped.
+- Fixed `examples/iframe_embed.html` UF-blue `#003087` → `#0021A5` to match.
+- Chart recoloring (Altair palette) intentionally DEFERRED — would require editing
+  each chart cell. See `docs/superpowers/specs/2026-06-24-qpsi-notebook-theming-design.md`.
+- Verified locally: all 10 notebooks export with the theme bundled.
+
+
 2026-03-17:
 
 - Created `notebooks/hypothesis_power.py` — Marimo app for Syllabus Topic 1: Hypothesis Testing, Power, and p-values.
